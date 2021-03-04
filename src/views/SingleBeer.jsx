@@ -1,44 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import Navmain from "../components/NavMain"
-import axios from "axios";
+import Navmain from '../components/NavMain';
+import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 
-
-
 function SingleBeer(props) {
+  const [beer, setBeer] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [beer, setBeer] = useState([])
+  useEffect(() => {
+    const beerId = props.match.params.id;
+    axios
+      .get('https://ih-beers-api2.herokuapp.com/beers/' + beerId)
+      .then((respFromApi) => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
 
-useEffect(() => {
-  const beerId = props.match.params.id
-  axios.get("https://ih-beers-api2.herokuapp.com/beers/" + beerId )
-  .then((respFromApi) => {
-    console.log(respFromApi.data)
-    setBeer([respFromApi.data])
-  })
-  .catch(err => {
-    console.log(err)
-  })
-
-}, [])
+        console.log(respFromApi.data);
+        setBeer([respFromApi.data]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <div>
-      {beer.map((beer) => {
-        return (
-          <div>
-            <p>{beer.name}</p>
-            <img src={beer.image_url}/>
-        <p>{beer.description}</p>
+      {loading ? (
+        <img src="https://cdn.dribbble.com/users/408943/screenshots/2887008/loading-macro-animation-for-brewery-website.gif" />
+      ) : (
+        beer.map((beer) => {
+          return (
+            <div>
+              <p>{beer.name}</p>
+              <img src={beer.image_url} />
             </div>
-        )
-      })}
+          );
+        })
+      )}
     </div>
-  )
+  );
 }
 
-export default SingleBeer
-
+export default SingleBeer;
 
 // export default class SingleBeer extends Component {
 
@@ -49,14 +53,14 @@ export default SingleBeer
 //       componentDidMount() {
 //         // console.log(this.props.match.params.id);
 //         const beerId = this.props.match.params.id;
-    
+
 //         axios.get("https://ih-beers-api2.herokuapp.com/beers/" + beerId).then((apiResponse) => {
 //           console.log(apiResponse);
-          
+
 //             this.setState({
 //               beer: apiResponse.data,
 //             });
-         
+
 //         });
 //       }
 
@@ -64,7 +68,7 @@ export default SingleBeer
 //         if (!this.state.beer) {
 //           return <div>Loading.....</div>;
 //         }
-    
+
 //         return (
 //           <div>
 //               <Navmain />

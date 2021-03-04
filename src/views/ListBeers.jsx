@@ -5,11 +5,15 @@ import { NavLink } from 'react-router-dom';
 
 function ListBeers() {
   const [beers, setBeers] = useState([]);
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     axios
       .get('https://ih-beers-api2.herokuapp.com/beers')
       .then((respFromApi) => {
+        setTimeout(() => {
+          setLoading(false)
+        }, 1000);
         setBeers(respFromApi.data);
       })
       .catch((err) => {
@@ -17,26 +21,30 @@ function ListBeers() {
       });
   }, []);
 
+
   return (
     <div>
-      <Navmain />
-      <h1>ALL BEERS</h1>
-      {beers.map((beer) => {
-        return (
-          <div key={beer._id}>
-            <h3>{beer.name}</h3>
-            <img
-              src={beer.image_url}
-              style={{ width: '100px', height: 'auto' }}
-            />
-            <NavLink exact to={`/beers/${beer._id}`}>
-              Details...
-            </NavLink>
-          </div>
-        );
-      })}
+      <Navmain/>
+      {loading ? (
+        <img src="https://cdn.dribbble.com/users/408943/screenshots/2887008/loading-macro-animation-for-brewery-website.gif" />
+      ) : (
+        beers.map((beer) => {
+          return (
+            <div>
+              <p>{beer.name}</p>
+              <img src={beer.image_url} />
+              <NavLink exact to={`/beers/${beer._id}`}>
+        Details...
+         </NavLink>
+            </div>
+          );
+        })
+      )}
     </div>
   );
+
+
+
 }
 
 export default ListBeers;

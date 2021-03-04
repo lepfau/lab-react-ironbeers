@@ -24,7 +24,7 @@ export default class RandomBeer extends Component {
 
       render() {
         if (!this.state.beer) {
-          return <div>Loading.....</div>;
+          return <img src="https://cdn.dribbble.com/users/408943/screenshots/2887008/loading-macro-animation-for-brewery-website.gif"/>;
         }
     
         return (
